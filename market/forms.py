@@ -7,6 +7,7 @@ def email_check(email):
     pattern = re.compile(r"\"?([-a-zA-Z0-9.`?{}]+@\w+\.\w+)\"?")
     return re.match(pattern, email)
 
+
 class RegisterForm(forms.Form):
     username = forms.CharField(label='Username', max_length=100, widget=forms.TextInput(attrs={'class': 'form-control'}))
     email = forms.CharField(label='Email',widget=forms.EmailInput(attrs={'class': 'form-control'}))

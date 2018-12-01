@@ -16,15 +16,6 @@ from django.contrib.auth.decorators import login_required
 import hashlib
 
 
-'''
-itemid = models.CharField(max_length = 100, primary_key = True)
-name = models.CharField(max_length = 50)
-description = models.TextField()
-picture = models.ImageField()
-price = models.DecimalField(max_digits=7, decimal_places=2)
-condition = models.CharField(max_length = 50)
-'''
-
 class ItemForm(ModelForm):
      class Meta:
          model = Item
@@ -41,7 +32,7 @@ def item_create(request):
      if request.POST:
         temp = request.POST.copy()
         temp['userid'] = request.session.get('user_id', None)
-        form = ItemForm(temp)
+        form = ItemForm(temp, request.FILES)
      else:
         form = ItemForm(None)
      if form.is_valid():
@@ -273,7 +264,7 @@ def send_email(email, code):
                     where Fighting Illini Trades.</p>
                     <p>Please click on the link to verify your email address.</p>
                     <p>This link will expire in {} days.</p>
-                    '''.format('http://127.0.0.1:8000', code, settings.CONFIRM_DAYS)
+                    '''.format('http://illinifleamarket.com', code, settings.CONFIRM_DAYS)
     print("send_email:" + code)
     msg = EmailMultiAlternatives(subject, text_content, settings.EMAIL_HOST_USER, [email])
     msg.attach_alternative(html_content, "text/html")
