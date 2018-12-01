@@ -1,0 +1,42 @@
+
+#This file serves a reminder and log file for all updates we made for the purpose of version control.
+
+#V002
+CRUD finished. We need correction so that update function works properly.
+Login and Register Html created under template/login folder.
+login, register, logout function defined but not implemented in views.py
+We need to make some changes to our User model later.
+Login and Register button works now.
+
+#V003
+Fixed Update
+Fixed ItemId / userId
+Started implementing login
+
+#V004
+Fixed Register / Login
+Rewrote models.py UserProfile
+Rewrote login.html, register.html
+
+
+#V005
+
+Fixed FrontEnd for register, implemented login/logout in view.py,
+register function also partially implemented (with errors)
+We need to fix User/UserProfile, I think that's causing the problem for Registration
+We don't need to password field for our User Model, get rid of it. We can check the password match in the front/service end,
+which I already implemented in register function written in view.py
+
+#V006
+
+Implemented Login/Logout, Register Functionality
+Need to implement Chat, Profile html.
+
+#V008
+Implement Profile/UserItem Functionality
+Pictures Inserted Unsloved.
+
+
+#V009
+Picture display and insertion bug solved.
+Email Authentication implemented.

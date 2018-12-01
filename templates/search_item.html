@@ -1,0 +1,100 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+{% load static %}
+<link rel="stylesheet" href="{% static 'semantic.min.css' %}">
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+<script src="{% static 'semantic.min.js' %}"></script>
+
+
+
+
+<form method="post">{% csrf_token %}
+
+    <div align = "center">
+      <div class="ui labeled input">
+        <div class="ui label">
+          Item Name:
+        </div>
+        <input type="text" placeholder="What do you want?" name="name" value="">
+      </div>
+    </div>
+    <br>
+
+
+    <div align = "center">
+      <div class="ui labeled input">
+        <div class="ui label">
+          Price Range From:
+        </div>
+        <input type="float"  name="lprice" value="" placeholder="Lower Price">
+        <div class = "ui label">
+          To:
+        </div>
+        <input type="float" name = "hprice" value="" placeholder = "Higher Price">
+      </div>
+    </div>
+    <br>
+
+    <div align = "center">
+      <div class = "ui selection dropdown">
+        <input type = "hidden" name = "category">
+         <i class="dropdown icon"></i>
+         <div class="default text">Category</div>
+         <div class="menu">
+         <div class="item" data-value="Electronics">Electronics</div>
+         <div class="item" data-value="Cosmetics">Cosmetics</div>
+         <div class="item" data-value="Clothing">Clothing</div>
+         <div class="item" data-value="Auto">Auto</div>
+         <div class="item" data-value="Furniture">Furniture</div>
+         <div class="item" data-value="Housing">Housing</div>
+         <div class="item" data-value="Lifestyle">Lifestyle</div>
+         <div class="item" data-value="Food">Food</div>
+       </div>
+     </div>
+     </div>
+     <br>
+
+     <div align = "center">
+       <div class="ui selection dropdown">
+          <input type="hidden" name="condition">
+          <i class="dropdown icon"></i>
+          <div class="default text">Condition</div>
+          <div class="menu">
+            <div class="item" data-value="BrandNew">
+              BrandNew
+            </div>
+            <div class="item" data-value="New(Other)">
+              New(Other)
+            </div>
+            <div class="item" data-value="Used">
+              Used
+            </div>
+          </div>
+      </div>
+      <br>
+      <br>
+
+
+    <!-- <p>condition:<input type="text" name="condition" value=""></p><br>
+    <p>category:<input type="text" name="category" value=""></p><br> -->
+
+     <button class="ui button" type="submit">Submit</button>
+
+
+    <!-- <p>name:<input type="text" name="name" value=""></p>
+    <br> -->
+</form>
+
+<script>
+    $(document).ready(function(){
+        $('.ui.selection.dropdown').dropdown();
+        $("#btn").on("click",()=>{
+            alert($("#gender").val());
+        });
+    });
+</script>
+
+
+{% endblock %}

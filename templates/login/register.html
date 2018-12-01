@@ -1,0 +1,131 @@
+{% extends "base.html" %}
+
+{% block content %}
+{% load static %}
+<link rel="stylesheet" href="{% static 'semantic.min.css' %}">
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+<script src="{% static 'semantic.min.js' %}"></script>
+
+
+<head>
+      <meta charset = "UTF-8">
+        <title>Register</title>
+</head>
+
+         <!-- <form method="post" action="" class="ui form">{% csrf_token %}
+              <div class="three fields">
+                <div class="field">
+                  <label>First name</label>
+                  <input type="text" placeholder="First Name">
+                </div>
+                <div class="field">
+                  <label>Middle name</label>
+                  <input type="text" placeholder="Middle Name">
+                </div>
+                <div class="field">
+                  <label>Last name</label>
+                  <input type="text" placeholder="Last Name">
+                </div>
+              </div>
+
+              <div class="three fields">
+                  <div class="field">
+                      <label>Username</label>
+                        <input type="text" name="UserName" placeholder="User Name">
+                  </div>
+                  <div class="field">
+                      <label>Email Address</label>
+                      <input type="text" name="Email" placeholder="Email Address">
+                  </div>
+                  <div class="field">
+                      <label>Phone Number</label>
+                      <input type="text" name="PhoneNumber" placeholder="Phone Number">
+                  </div>
+               </div>
+
+               <div class = "three fields">
+                 <div class = "field">
+                   <label>Password</label>
+                      <input type="text" name="Password1" placeholder="Password">
+                 </div>
+                 <div class = "field">
+                   <label>Confirm your password</label>
+                      <input type="text" name="Password2" placeholder="Retype your password here">
+                 </div>
+              </div>
+              <div class="field">
+                  <label>Address</label>
+                  <div class="fields">
+                    <div class="twelve wide field">
+                      <input type="text" name="Address" placeholder="Street Address">
+                    </div>
+                  </div>
+              </div>
+
+              <div align = "center">
+                <button class="ui button" type="submit">Submit</button>
+              </div>
+          </form> -->
+          <div class="container">
+        <div class="col-md-4 col-md-offset-4">
+          <form class='form-register' action="/register/" method="post">
+
+              {% if message %}
+                  <div class="alert alert-warning">{{ message }}</div>
+              {% endif %}
+
+              {% csrf_token %}
+
+              <h2 class="text-center">New User Registration</h2>
+              <div class="form-group">
+                  {{ register_form.username.label_tag }}
+                  {{ register_form.username}}
+              </div>
+              <div class="form-group">
+                  <label >Password:</label>
+                  {{ register_form.password1 }}
+              </div>
+              <div class="form-group">
+                  <label >Confirm your password:</label>
+                  {{ register_form.password2 }}
+              </div>
+              <div class="form-group">
+                  {{ register_form.email.label_tag }}
+                  {{ register_form.email }}
+              </div>
+              <div class="form-group">
+                  {{ register_form.phonenumber.label_tag }}
+                  {{ register_form.phonenumber }}
+              </div>
+              <div class="form-group">
+                  {{ register_form.address.label_tag }}
+                  {{ register_form.address }}
+              </div>
+
+              <button type="reset" class="btn btn-default pull-left">Reset</button>
+              <button type="submit" class="btn btn-primary pull-right">Sign me up!</button>
+
+          </form>
+        </div>
+    </div> <!-- /container -->
+
+
+          <!-- <div class  = "form-wrapper">
+            <form class = "ui form" method = "post" action = "">
+              {% csrf_token %}
+              {% for field in form %}
+                <div class = "filedWrapper" class = "ui form">
+                  {{field.errors}}
+                  {{field.label_tag}} {{field}}
+                  {% if field.help_text %}
+                    <p class = "help"> {{field.help_text|safe}}</p>
+                  {% endif %}
+                </div>
+                {% endfor %}
+                <div class = "button-wrapper submit ">
+                  <input type = "submit" value = "Submit">
+                </div>
+              </form>
+            </div> -->
+
+{% endblock %}

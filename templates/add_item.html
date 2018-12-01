@@ -1,0 +1,118 @@
+{% extends "base.html" %}
+
+{% block content %}
+{% load static %}
+<link rel="stylesheet" href="{% static 'semantic.min.css' %}">
+<link type="text/css" rel="stylesheet" href="css/materialize.min.css"  media="screen,projection"/>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+<script src="{% static 'semantic.min.js' %}"></script>
+<script type="text/javascript" src="js/materialize.min.js"></script>
+
+
+<form class = "ui form" method = "post">{% csrf_token %}
+
+    <h3 class = "ui dividing header">Item Information</h3>
+    <div class="field">
+
+      <div class="two fields">
+        <!-- <div class="field">
+          <label>ItemId</label>
+          <input type="text" name="itemid" placeholder= "Will use UUID later">
+        </div> -->
+        <div class="field">
+          <label>Item Name</label>
+          <input type="text" name="name" placeholder="Name your item">
+        </div>
+      </div>
+    </div>
+
+    <div class = "two fields">
+      <div class = "field">
+        <label>Condition of your Item</label>
+
+          <div class="ui fluid selection dropdown">
+             <input type="hidden" name="condition">
+             <i class="dropdown icon"></i>
+             <div class="default text">Condition</div>
+               <div class="menu">
+                 <div class="item" data-value="BrandNew">
+                   Brand New
+                 </div>
+                 <div class="item" data-value="New(Other)">
+                   New(Other)
+                 </div>
+                 <div class="item" data-value="Used">
+                   Used
+                 </div>
+               </div>
+             </div>
+
+         </div>
+         <div class = "field">
+           <label>Category of Your Item</label>
+           <div class = "ui fluid selection dropdown">
+             <input type = "hidden" name = "category">
+              <i class="dropdown icon"></i>
+              <div class="default text">Category</div>
+              <div class="menu">
+              <div class="item" data-value="NotSelected">Not Selected</div>
+              <div class="item" data-value="Electronics">Electronics</div>
+              <div class="item" data-value="Cosmetics">Cosmetics</div>
+              <div class="item" data-value="Clothing">Clothing</div>
+              <div class="item" data-value="Auto">Auto</div>
+              <div class="item" data-value="Furniture">Furniture</div>
+              <div class="item" data-value="Housing">Housing</div>
+              <div class="item" data-value="Lifestyle">Lifestyle</div>
+              <div class="item" data-value="Food">Food</div>
+            </div>
+          </div>
+         </div>
+     </div>
+
+
+    <div class="field">
+      <label>Price: </label>
+      <div class="fields">
+        <div class = "eight wide field">
+            <div class = "ui input">
+              <input type="float" name="price" placeholder="How much you want to charge?">
+            </div>
+        </div>
+      </div>
+    </div>
+
+    <!--{{ form.as_p }} -->
+
+    <div class = "field">
+      <label>Description: </label>
+      <div class="row">
+          <div class="input-field col s12">
+            <textarea name="description" class="materialize-textarea" data-length="250" placeholder="Write your description here"></textarea>
+          </div>
+        </div>
+    </div>
+
+    <div class="file-field input-field">
+     <div class="btn">
+       <span>Upload Your Picture</span>
+       <input type="file" name = "picture">
+     </div>
+     <div class="file-path-wrapper">
+       <input class="file-path validate" type="text">
+     </div>
+   </div>
+
+    <div align = "center">
+      <button class="ui button" type="submit">Submit</button>
+    </div>
+</form>
+<script>
+    $(document).ready(function(){
+        $('.ui.selection.dropdown').dropdown();
+        $("#btn").on("click",()=>{
+            alert($("#gender").val());
+        });
+    });
+</script>
+
+{% endblock %}

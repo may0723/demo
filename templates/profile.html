@@ -1,0 +1,62 @@
+{% extends "base_profile.html"%}
+{% block content %}
+
+
+     <!-- <div class = "ui container">
+        <div class = "ui secondary pointing menu">
+            <div class = "active item">
+              <a href = "#" > Home </a>
+            </div>
+            <div class = "active item">
+              <a href = "#">Hot</a>
+            </div>
+            <div class = "active item">
+              <a href="{% url 'item_create' %}">Add New Item</a>
+            </div>
+            <div class = "active item">
+              <a href="{% url 'item_search' %}">Search</a>
+            </div>
+
+      <div class="right menu">
+         <div class="item">
+           <div class="ui icon input">
+             <input type="text" placeholder="Search...">
+             <i class="search link icon"></i>
+           </div>
+         </div>
+         <div class="item">
+           <a href="/login" class="ui button">Login</a>
+         </div>
+       </div>
+     </div>
+   </div>
+
+   <div class = "ui hidden divider">
+   </div> -->
+   <div align = "center">
+       {% if request.session.is_login %}
+       <h1>Hello,{{ request.session.user_name }}, Welcome back!</h1>
+       {% else %}
+       <h1>Please Login to unlock more</h1>
+       {% endif %}
+    </div>
+   <div class = "ui container segment">
+      <h3 class = "ui header">Items</h3>
+     {% for item in items %}
+     <div>
+       <div class = "ui divider"></div>
+         <a href = "{% url 'home'%}">
+            <h3><a href = "{% url 'item_detail' item.itemid  %}"> {{item.name|capfirst}} <!--&nbsp &nbsp &nbsp <a href="{% url 'item_delete' item.itemid %}">delete</a>
+                                      &nbsp &nbsp &nbsp <a href="{% url 'item_update' item.itemid %}">update</a>-->  </h3>
+
+            <div class = "ui label"> Price: ${{ item.price }} </div>
+            <h5> Description:    {{ item.description }} </h5>
+         </a>
+      </div>
+      {% endfor %}
+    </div>
+
+
+     <!--JavaScript at end of body for optimized loading-->
+     <!-- <script type="text/javascript" src="js/materialize.min.js"></script> -->
+     {% endblock %}

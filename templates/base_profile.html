@@ -1,0 +1,101 @@
+{% load staticfiles %}
+<html lang="en-US">
+    <head>
+      <meta charset="utf-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Home - IlliniFleaMarket</title>
+        {% load static %}
+        <link rel="stylesheet" href="{% static 'semantic.min.css' %}">
+        <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
+        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+        <script src="{% static 'semantic.min.js' %}"></script>
+    </head>
+    <body>
+    {% block header %}
+      {% load static %}
+        <div id="page" class="hfeed site">
+            <header>
+                <div class="header">
+                    <div class="main-head-wrap inner-wrap clearfix">
+                        <div align = "center" id="header-logo-image">
+                            <a href="/">
+                                <img  src="{% static 'images/illinilogo.png' %}"  width = "200"  alt="IlliniFleaMarket" >
+                            </a>
+                        </div>
+                        <div id="header-text" class="" align = "center">
+                            <h1 id="site-title">
+                                <a href="/" title="IlliniFleaMarket" rel="home">IlliniFleaMarket</a>
+                            </h1>
+                            <h5>Where Fighting Illini trades</h5>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+
+
+            <!-- <div class="main-wrapper">
+                <div class="single-page clearfix">
+                    <div class="inner-wrap">
+                        <p>Wisdom Pet Medicine strives to blend the best in traditional and alternative medicine in the diagnosis and treatment of health conditions in companion animals, including dogs, cats, birds, reptiles, rodents, and fish. We apply the latest healthcare technology, along with the wisdom garnered in the centuries old tradition of veterinary medicine, to find the safest and most effective treatments and cures, while maintaining a caring relationship with our patients and their guardians.</p>
+                        <hr> -->
+          <div class = "ui secondary menu">
+
+              <a class = "ui header labeled item" href = "{%url 'home' %}"> Home </a>
+              <div class = "item">
+                <div class = "ui basic buttons">
+                <a class = "ui basic button">Hot Items</a>
+
+
+                <a class = "ui blue submit button" href="{%url 'item_create' %}">Add Item</a>
+              
+                <a class = "ui basic button">New Listed</a>
+                </div>
+              </div>
+              <div align = "center" class="item" >
+                <div class="ui icon input">
+                <a class=  "ui blue submit button" href="{%url 'item_search'%}">Search</a>
+                <a class = "ui blue submit button" href="{%url 'MyItems'%}"> MyItems </a>
+              </div>
+              </div>
+
+              <div class = "right menu">
+                <div class = "right item">
+                  {% if request.session.is_login %}
+                  <a class="ui secondary button" href="{%url 'logout'%}">
+                      Logout
+                  </a>
+                  {% else %}
+                    <div class = "ui buttons">
+                      <a class = "ui positive button" href="{%url 'login'%}"  >
+                        Login
+                      </a>
+                      <div class = "or"></div>
+                      <a class="ui button" href="{%url 'register'%}"  >
+                        Register
+                    </a>
+                  {% endif %}
+                  </div>
+                </div>
+              </div>
+          </div>
+
+          <div class = "ui hidden divider">
+          </div>
+
+
+          <div>
+          {% block content %}
+          {% endblock %}
+          </div>
+
+
+    {% endblock %}
+    <footer id="colophon">
+        <div class="inner-wrap">
+
+        </div>
+    </footer>
+    </body>
+</html>

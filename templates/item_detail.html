@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+{% load static %}
+<link rel="stylesheet" href="{% static 'semantic.min.css' %}">
+<link type="text/css" rel="stylesheet" href="css/materialize.min.css"  media="screen,projection"/>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+<script src="{% static 'semantic.min.js' %}"></script>
+<script type="text/javascript" src="js/materialize.min.js"></script>
+
+{% block head %}
+<title>Item Detail</title>
+{% endblock %}
+
+
+{% block content %}
+
+<div class = "ui raised very padded container segment">
+
+  <div align = "center">   <h1 class = "ui header">Item Info</h1> </div>
+  <br><br><br>
+  <div class="ui two column grid">
+          <div class="column">
+              <div class = "ui massive orange label">
+               Name: {{item.name|capfirst}}
+              </div>
+              <br>
+              <div class = "ui massive orange label">
+               Price: {{item.price|capfirst}}
+              </div>
+              <div class = "ui massive orange label">
+              Description {{item.description|capfirst}}
+              </div>
+              <div class = "ui massive orange label">
+               Condition: {{item.condition|capfirst}}
+              </div>
+          </div>
+          <div class = "column">
+              <div class = "ui fluid image">
+                {% if item.picture %}
+                  <img src = "{{ item.picture.url }}" width = "480">
+                {% endif %}
+              </div>
+          </div>
+</div>
+
+
+<script>
+    $(document).ready(function(){
+        $('.ui.selection.dropdown').dropdown();
+        $("#btn").on("click",()=>{
+            alert($("#gender").val());
+        });
+    });
+</script>
+
+{% endblock %}
