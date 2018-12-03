@@ -5,6 +5,7 @@ from django.contrib.auth.models import User
 
 from django import forms
 from django.contrib.auth.models import User
+from datetime import datetime
 import re
 
 class ParentCate(models.Model):
@@ -27,8 +28,8 @@ class Admin(models.Model):
 
 class UserProfile(models.Model):
     # user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')
-    userid = models.UUIDField(default = uuid.uuid4(), primary_key = True)
-
+    #userid = models.UUIDField(default = uuid.uuid4(), primary_key = True)
+    userid = models.AutoField(primary_key=True)
     username = models.CharField(max_length = 100,default = "user")
     password = models.CharField(max_length = 100,default = "password1")
     phonenumber = models.CharField(max_length =20)
@@ -62,12 +63,14 @@ class ConfirmString(models.Model):
         verbose_name_plural = "Confirmation Code"
 
 class Item(models.Model):
-    itemid = models.UUIDField(default=uuid.uuid4(), primary_key = True)
+    itemid = models.AutoField(primary_key=True)
+    #itemid = models.UUIDField(default=uuid.uuid4(), primary_key = True)
     name = models.CharField(max_length = 50)
     description = models.TextField()
     picture = models.ImageField(upload_to='item_image', blank = True)
     price = models.DecimalField(max_digits=7, decimal_places=2)
     condition = models.CharField(max_length = 50)
+    keyword = models.CharField(max_length = 50, blank = True)
     #subcateid = models.ForeignKey(SubCate, related_name = 'sub_id',
     #on_delete = models.CASCADE)
     category = models.CharField(max_length = 50, default='Not Selected')
@@ -82,3 +85,22 @@ class Item(models.Model):
  # related_name = 'adminid',
  # related_name = 'parentid',
 # , primary_key = True
+
+class Comment(models.Model):
+    commentid = models.AutoField(primary_key=True)
+    #commentid = models.UUIDField(default=uuid.uuid4(), primary_key = True)
+    itemid = models.CharField(max_length = 50)
+    ownername = models.CharField(max_length = 50)
+    buyername = models.CharField(max_length = 50)
+    buyeremail = models.EmailField(max_length = 100)
+    buyerphone = models.CharField(max_length =20)
+    commenttext = models.TextField()
+    commentdate = models.DateTimeField(default=datetime.now, blank=True)
+
+    def __str__(self):
+        return self.itemid
+
+
+class Likes(models.Model):
+    userid = models.CharField(max_length=100)
+    itemid = models.CharField(max_length=100)

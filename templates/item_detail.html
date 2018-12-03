@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends request.session.is_login|yesno:"base_profile.html,base.html" %}
 {% load staticfiles %}
 {% load static %}
 <link rel="stylesheet" href="{% static 'semantic.min.css' %}">
@@ -13,26 +13,55 @@
 
 
 {% block content %}
-
-<div class = "ui raised very padded container segment">
-
-  <div align = "center">   <h1 class = "ui header">Item Info</h1> </div>
-  <br><br><br>
+<br>
+<div class = "ui raised very padded container segment" style = "background-color:MidnightBlue">
+  <div align = "center">
+    <font color = "White" size="6">
+    {{item.name|capfirst}}
+    </font>
+  </div>
+  <div>
+    {% if request.session.is_login %}
+        {% if bool_liked %}
+            <p align="right"> <font color="#e8640c">You've liked this item</font> </p>
+            <p align="right"><a class = "ui header labeled item" href = "{% url 'dislike' item.itemid %}"> <font color="#e8640c" size="3">Dislike</font> </a> </p>
+        {% else %}
+            <p align="right"> <a class = "ui header labeled item" href = "{% url 'like' item.itemid %}"> <font color="#e8640c" size="3">Like</font> </a> </p>
+        {% endif %}
+    {% endif %}
+  </div>
+  <br><br>
   <div class="ui two column grid">
-          <div class="column">
-              <div class = "ui massive orange label">
-               Name: {{item.name|capfirst}}
-              </div>
-              <br>
-              <div class = "ui massive orange label">
-               Price: {{item.price|capfirst}}
-              </div>
-              <div class = "ui massive orange label">
-              Description {{item.description|capfirst}}
-              </div>
-              <div class = "ui massive orange label">
-               Condition: {{item.condition|capfirst}}
-              </div>
+          <div class="column" style="background-color:MidnightBlue">
+            <!--<div class = "ui massive orange label">
+              <font color = "DarkBlue">
+             Price: {{item.price|capfirst}}
+              </font>
+            </div>
+          -->
+            <font color = "White" size="5">
+              Price: {{item.price|capfirst}}
+            </font>
+            <br>
+            <font color = "White" size="5">
+              Condition: {{item.condition|capfirst}}
+            </font>
+            <br>
+            <font color = "White" size="5">
+             Category: {{item.category|capfirst}}
+            </font>
+            <br>
+            <font color = "White" size="4">
+             Keyword: {{item.keyword|capfirst}}
+            </font>
+            <br>
+            <font color = "White" size="4">
+             Description: {{item.description|capfirst}}
+            </font>
+            <br>
+            <font color = "White" size="4">
+             Seller: {{seller.username}}, {{seller.email}}
+            </font>
           </div>
           <div class = "column">
               <div class = "ui fluid image">
@@ -41,8 +70,98 @@
                 {% endif %}
               </div>
           </div>
+  </div>
 </div>
 
+
+<!--
+<div class = "sixteen wide column">
+  <div class="ui items">
+  <div class="item">
+    <div class="image">
+      {% if item.picture %}
+        <img src = "{{ item.picture.url }}" width = "480">
+      {% endif %}
+    </div>
+    <div class="content">
+      <a class="header">Header</a>
+      <div class="meta">
+        <span>Description</span>
+      </div>
+      <div class="description">
+        <p></p>
+      </div>
+      <div class="extra">
+        Additional Details
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+-->
+
+
+<!--
+<div class = "ui raised very padded container segment">
+  <div class = "ui comments " >
+    <div align = "center">
+      <h1 class = "ui header">Comments</h1> </div>
+      <br><br><br>
+    {% for comment in comments %}
+      <div>
+        <div class = "ui divider"></div>
+             <h3>  {{comment.buyername}}  </h3>
+             <h3>  {{comment.buyeremail}}  </h3>
+             <h3>  {{comment.buyerphone}}  </h3>
+             <h5>  {{comment.commenttext}} </h5>
+             <h5>  Commented on: {{comment.commentdate}} </h5>
+          </a>
+       </div>
+     {% endfor %}
+     <form class = "ui form" method = "post", enctype="multipart/form-data">{% csrf_token %}
+       <div class = "field">
+         <div class="row">
+             <div class="input-field col s8">
+               <textarea name="commenttext" class="materialize-textarea" data-length="250" placeholder="Your Comment"></textarea>
+             </div>
+           </div>
+       </div>
+     <div align = "center">
+       <button class="ui blue submit button" type="submit">Post New Comment</button>
+     </div>
+      </form>
+</div>
+</div>
+-->
+
+<div class = "ui raised very padded container segment" style = "background-color:#e8640c">
+<div class="ui comments">
+  <div class = "sixteen wide column">
+    <h3 class="ui dividing header" align="middle"> <font color = "MidnightBlue" size="4">Comments </font> </h3>
+    {% for comment in comments %}
+    <div class="comment">
+      <div class="content">
+       <span class="author"> <font color = "MidnightBlue" size="2">{{comment.buyername}}, {{comment.buyeremail}}</font> </span>
+       <div class="metadata">
+         <span class="date"> <font color = "MidnightBlue" size="2"> {{comment.commentdate}} </font> </span>
+       </div>
+       <div class="text">
+         <font color = "MidnightBlue" size="3"> {{comment.commenttext}} </font>
+       </div>
+     </div>
+   </div>
+{% endfor %}
+<form class="ui form" method = "post", enctype="multipart/form-data">  {% csrf_token %}
+     <div class="field">
+       <textarea name="commenttext"></textarea>
+     </div>
+     <div align = "center">
+       <button class="ui submit Blue button" type="submit">Post New Comment</button>
+     </div>
+</form>
+  </div>
+</div>
+</div>
 
 <script>
     $(document).ready(function(){

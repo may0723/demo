@@ -37,4 +37,8 @@ urlpatterns = [
     url(r'^logout/$', views.logout, name='logout'),
     url(r'^detail/(?P<id>.*)', views.item_detail, name='item_detail'),
     url(r'^confirm/$', views.user_confirm),
+    url(r'^like/(?P<id>.*)$', views.like, name='like'),
+    url(r'^dislike/(?P<id>.*)$', views.dislike, name='dislike'),
+    url(r'^recommendation/$', views.recommendation, name='recommendation')
+
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

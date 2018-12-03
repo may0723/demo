@@ -1,0 +1,27 @@
+{% extends request.session.is_login|yesno:"base_profile.html,base.html" %}
+{% block content %}
+
+<br>
+<br>
+<div class = "ui container segment">
+   <h3 class = "ui header">Items</h3>
+  {% for item in items %}
+  <div>
+    <div class = "ui divider"></div>
+      <a href = "{% url 'home'%}">
+         <h3>  <a href = "{% url 'item_detail' item.itemid  %}">  {{item.name|capfirst}}   </a>   </h3>
+                      <!--<div >
+                        <h4>
+                      &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp <a href="{% url 'item_delete' item.itemid %}">delete</a>
+                       &nbsp &nbsp &nbsp <a href="{% url 'item_update' item.itemid %}">update</a>
+                       </h4>
+                     </div>-->
+
+         <h5> Price: ${{ item.price }} </h5>
+         <h5> Description:    {{ item.description }} </h5>
+      </a>
+   </div>
+   {% endfor %}
+ </div>
+
+{% endblock %}

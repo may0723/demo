@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.http import HttpResponse,Http404
 from django.shortcuts import redirect, get_object_or_404
 from django.forms import ModelForm
-from .models import Item,UserProfile,ConfirmString
+from .models import Item,UserProfile,ConfirmString,Comment,Likes
 import datetime,pytz
 from django.conf import settings
 from django.contrib.auth.models import User
@@ -12,23 +12,21 @@ from .forms import RegisterForm, LoginForm
 from django.http import HttpResponseRedirect
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
+from django.core.exceptions import ObjectDoesNotExist
+import operator
 
 import hashlib
 
 
-'''
-itemid = models.CharField(max_length = 100, primary_key = True)
-name = models.CharField(max_length = 50)
-description = models.TextField()
-picture = models.ImageField()
-price = models.DecimalField(max_digits=7, decimal_places=2)
-condition = models.CharField(max_length = 50)
-'''
-
 class ItemForm(ModelForm):
      class Meta:
          model = Item
-         fields = [ 'name', 'price', 'condition','category', 'description', 'picture','userid']
+         fields = [ 'name', 'price', 'condition','keyword','category', 'description', 'picture', 'userid']
+
+class CommentForm(ModelForm):
+     class Meta:
+         model = Comment
+         fields = ['itemid', 'buyername', 'buyeremail', 'buyerphone', 'commenttext']#, 'commentdate']
 
 def home(request):
     items = Item.objects.all()
@@ -41,7 +39,7 @@ def item_create(request):
      if request.POST:
         temp = request.POST.copy()
         temp['userid'] = request.session.get('user_id', None)
-        form = ItemForm(temp)
+        form = ItemForm(temp, request.FILES)
      else:
         form = ItemForm(None)
      if form.is_valid():
@@ -67,26 +65,64 @@ def item_create(request):
     #     return redirect('home')
 def item_detail(request, id, template_name='item_detail.html'):
     item = get_object_or_404(Item, itemid=id)
-    form = ItemForm(request.POST or None, instance=item)
-    print(form)
+    seller = UserProfile.objects.get(userid = item.userid)
+    userid = request.session.get('user_id', None)
+    try:
+        liked = Likes.objects.get(itemid=id, userid = userid)
+    except Likes.DoesNotExist:
+        liked = None
+
+    bool_liked = False
+    if liked:
+        bool_liked = True
+
+    comment_exist = True
+    if request.POST:
+        temp = request.POST.copy()
+        temp['itemid'] = id
+        temp['buyername'] = request.session.get('user_name', None)
+        temp['buyeremail'] = request.session.get('user_email', None)
+        temp['buyerphone'] = request.session.get('user_phone', None)
+        form = CommentForm(temp)
+    else:
+        form = ItemForm(None)
+
+    try:
+        comments = Comment.objects.filter(itemid=id)
+    except Comment.DoesNotExist:
+        comment_exist = False
+
     if form.is_valid():
-        form.save()
-        return redirect('home')
-    print(item)
-    print(item.description)
-    return render(request, template_name, {'item':item, 'description': item.description})
+       post = form.save(commit=False)
+       post.save()
+       form = ItemForm(None)
+       request.POST = None
+       comments = Comment.objects.filter(itemid=id)
+       return render(request, 'redirect.html', {'item':item, 'seller':seller, 'description': item.description, 'comments': comments})
+
+    if comment_exist:
+        return render(request, template_name, {'item':item, 'seller':seller, 'description': item.description, 'comments': comments, 'bool_liked': bool_liked})
+    else:
+        return render(request, template_name, {'item':item, 'seller':seller, 'description': item.description, 'bool_liked': bool_liked})#, 'comments': comments})
 
 def item_update(request, id, template_name='update_item.html'):
     item = get_object_or_404(Item, itemid=id)
-    print("What Item")
-    print(item)
     form = ItemForm(request.POST or None, instance=item)
-    print(form)
+
+    if request.POST:
+        temp = request.POST.copy()
+        temp['userid'] = request.session.get('user_id', None)
+        form = ItemForm(temp)
+    else:
+        form = ItemForm(None)
+
     if form.is_valid():
-        form.save()
-        return redirect('profile')
-    print(item)
-    print(item.description)
+        oldid = item.itemid
+        item.delete()
+        f = form.save(commit=False)
+        f.itemid = oldid
+        f.save()
+        return redirect('MyItems')
     return render(request, template_name, {'item':item, 'description': item.description})
 
 
@@ -95,7 +131,6 @@ def item_delete(request, id, template_name='home.html'):
 
     item.delete()
     return redirect('profile')
-    #return render(request, template_name, {'object':book})
 
 def item_search(request, template_name='search_item.html'):
     if request.method == 'POST':
@@ -106,14 +141,9 @@ def item_search(request, template_name='search_item.html'):
         hprice = request.POST.get('hprice', None)
 
         s_condition = request.POST.get('condition', None)
-
         s_category = request.POST.get('category', None)
-
         res = Item.objects.all()
 
-        print(name)
-        print(lprice)
-        print(hprice)
         if name:
             res = res.filter(name__icontains = name)
 
@@ -130,9 +160,7 @@ def item_search(request, template_name='search_item.html'):
             res = res.filter(category = s_category)
 
         data = {}
-        print(res)
         data['item_list'] = res
-        print(data)
         return render(request, 'search_result.html', data)
 
     return render(request, template_name)
@@ -156,6 +184,8 @@ def login(request):
                 request.session['is_login'] = True
                 request.session['user_id'] = str(user.userid)
                 request.session['user_name'] = user.username
+                request.session['user_phone'] = user.phonenumber
+                request.session['user_email'] = user.email
                 return redirect('profile')
             else:
                 message = "Wrong Password!"
@@ -221,7 +251,6 @@ def register(request):
 
 
                 code = make_confirm_string(new_user)
-                print("email:" + code)
                 send_email(email,code)
 
                 message = "Please check your email inbox and confirm your email address."
@@ -254,7 +283,6 @@ def hash_code(s, salt='mysite'):
 def make_confirm_string(user):
     now = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     code = hash_code(user.username, now)
-    print("make_confirm_string:" + code)
     ConfirmString.objects.create(code=code, user=user)
     return code
 
@@ -273,7 +301,7 @@ def send_email(email, code):
                     where Fighting Illini Trades.</p>
                     <p>Please click on the link to verify your email address.</p>
                     <p>This link will expire in {} days.</p>
-                    '''.format('http://127.0.0.1:8000', code, settings.CONFIRM_DAYS)
+                    '''.format('http://illinifleamarket.com', code, settings.CONFIRM_DAYS)
     print("send_email:" + code)
     msg = EmailMultiAlternatives(subject, text_content, settings.EMAIL_HOST_USER, [email])
     msg.attach_alternative(html_content, "text/html")
@@ -281,7 +309,6 @@ def send_email(email, code):
 
 def user_confirm(request):
     code = request.GET.get('code', None)
-    print(code)
     message = ''
     try:
         confirm = ConfirmString.objects.get(code=code)
@@ -303,6 +330,124 @@ def user_confirm(request):
         confirm.delete()
         message = 'Thank you for verifying your email, please Login.'
         return render(request, 'login/confirm.html', locals())
+
+def like(request, id):
+
+    userid=request.session.get('user_id', None)
+    like = Likes(userid=userid, itemid=id)
+
+    like.save()
+
+    #context = {'itemid' : id}
+    return redirect("item_detail", id)
+    #return render(request, 'like.html', context)
+
+def dislike(request, id):
+
+    userid=request.session.get('user_id', None)
+    like = Likes.objects.get(userid=userid, itemid=id)
+    like.delete()
+
+    #context = {'itemid' : id}
+    #return render(request, 'item_detail.html', context)
+    return redirect("item_detail", id)
+
+def recommendation(request):
+    temp = []
+    userid = request.session.get('user_id', None)
+    items = Likes.objects.filter(userid=userid).order_by('-id')[:3]
+
+    for item_like in items:
+        itemid_first = item_like.itemid
+        print("itemid_first is")
+        print(itemid_first)
+        item = Item.objects.get(itemid=itemid_first)
+        keyword = item.keyword
+        price = item.price
+        category = item.category
+        condition = item.condition
+
+        m = Item.objects.filter(category=category).filter(keyword=keyword).exclude(userid=userid)
+        print("here m")
+        print(m)
+        totalNumber = m.count()
+
+
+        weights = {}
+
+        for item in m:
+            weight = measurePrice(item.price) + measureCondition(item.condition)
+            itemid = item.itemid
+            weights[itemid] = weight
+        weight_sorted = sorted(weights.items(), key=operator.itemgetter(1))
+        weight_sorted.reverse()
+        print("here weight_sorted")
+        print(weight_sorted)
+        recomItems = []
+        if totalNumber >= 5:
+            recomItems = weight_sorted[:5]
+        else:
+            recomItems = weight_sorted
+            print("here recomItems")
+            print(recomItems)
+            n = Item.objects.filter(category=category).exclude(keyword__exact=keyword).exclude(userid = userid)
+            print("here n")
+            print(n)
+            weights_category = {}
+            for item in n:
+                weight = measurePrice(item.price) + measureCondition(item.condition)
+                itemid = item.itemid
+                weights_category[itemid] = weight
+            weight_sorted_category = sorted(weights_category.items(), key=operator.itemgetter(1))
+            weight_sorted_category.reverse()
+            number = n.count()
+            if number > 5 - totalNumber:
+                a = 5 - totalNumber
+                for i in range(a):
+                    recomItems.append(weight_sorted_category[i])
+            else:
+                for i in range(number):
+                    recomItems.append(weight_sorted_category[i])
+
+
+            for j in recomItems:
+                if j[0] in temp:
+                    pass
+                else:
+                    temp.append(j[0])
+            print("here's temp")
+            print(temp)
+
+    recom = []
+    for i in range(len(temp)):
+        item = Item.objects.get(itemid=temp[i])
+        recom.append(item)
+
+    context = {'items' : recom}
+    return render(request, 'recommendation.html', context)
+
+def measurePrice(price):
+    if price < 20:
+        weight = 5
+    elif price < 50:
+        weight = 4
+    elif price < 100:
+        weight = 3
+    elif price < 1000:
+        weight = 2
+    else:
+        weight = 1
+    return weight
+
+def measureCondition(condition):
+    if condition == "BrandNew":
+        weight = 3
+    elif condition == "New(Other)":
+        weight = 2
+    else:
+        weight = 1
+    return weight
+
 
 def logout(request):
     if not request.session.get('is_login', None):

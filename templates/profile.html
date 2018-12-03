@@ -33,13 +33,7 @@
 
    <div class = "ui hidden divider">
    </div> -->
-   <div align = "center">
-       {% if request.session.is_login %}
-       <h1>Hello,{{ request.session.user_name }}, Welcome back!</h1>
-       {% else %}
-       <h1>Please Login to unlock more</h1>
-       {% endif %}
-    </div>
+   <br><br>
    <div class = "ui container segment">
       <h3 class = "ui header">Items</h3>
      {% for item in items %}
