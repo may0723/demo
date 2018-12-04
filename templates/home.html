@@ -37,7 +37,7 @@
   <br>
    <div class = "ui container segment">
       <h3 class = "ui header">Items</h3>
-     {% for item in items %}
+     {% for item in page_obj %}
      <div>
        <div class = "ui divider"></div>
          <a href = "{% url 'home'%}">
@@ -49,13 +49,18 @@
                           </h4>
                         </div>-->
 
-            <h5> Price: ${{ item.price }} </h5>
+            <div class="ui huge label"> Price: ${{ item.price }} </div>
             <h5> Description:    {{ item.description }} </h5>
          </a>
       </div>
       {% endfor %}
     </div>
 
+    <div align="center">
+    {% for page_num in paginator_obj.page_range %}
+        <a href="?page={{ page_num }}">{{ page_num }}</a> &nbsp 
+    {% endfor %}
+    </div>
 
      <!--JavaScript at end of body for optimized loading-->
      <!-- <script type="text/javascript" src="js/materialize.min.js"></script> -->

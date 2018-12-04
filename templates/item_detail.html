@@ -14,9 +14,9 @@
 
 {% block content %}
 <br>
-<div class = "ui raised very padded container segment" style = "background-color:MidnightBlue">
+<div class = "ui raised very padded container segment" style = "background-color:White">
   <div align = "center">
-    <font color = "White" size="6">
+    <font color = "Black" size="6">
     {{item.name|capfirst}}
     </font>
   </div>
@@ -32,41 +32,41 @@
   </div>
   <br><br>
   <div class="ui two column grid">
-          <div class="column" style="background-color:MidnightBlue">
+          <div class="column" style="background-color:White">
             <!--<div class = "ui massive orange label">
               <font color = "DarkBlue">
              Price: {{item.price|capfirst}}
               </font>
             </div>
           -->
-            <font color = "White" size="5">
+            <font color = "Black" size="5">
               Price: {{item.price|capfirst}}
             </font>
             <br>
-            <font color = "White" size="5">
+            <font color = "Black" size="5">
               Condition: {{item.condition|capfirst}}
             </font>
             <br>
-            <font color = "White" size="5">
+            <font color = "Black" size="5">
              Category: {{item.category|capfirst}}
             </font>
             <br>
-            <font color = "White" size="4">
+            <font color = "Black" size="4">
              Keyword: {{item.keyword|capfirst}}
             </font>
             <br>
-            <font color = "White" size="4">
+            <font color = "Black" size="4">
              Description: {{item.description|capfirst}}
             </font>
             <br>
-            <font color = "White" size="4">
+            <font color = "Black" size="4">
              Seller: {{seller.username}}, {{seller.email}}
             </font>
           </div>
           <div class = "column">
               <div class = "ui fluid image">
                 {% if item.picture %}
-                  <img src = "{{ item.picture.url }}" width = "480">
+                  <img src = "{{ item.picture.url }}" width = "640">
                 {% endif %}
               </div>
           </div>

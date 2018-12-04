@@ -12,7 +12,7 @@
 
 <form class = "ui form" method = "post" enctype="multipart/form-data"> {% csrf_token %}
 
-    <h3 class = "ui dividing header">Item Information</h3>
+    <h3 class = "ui dividing header"><h3>Item Information</h3></h3>
     <div class="field">
 
       <div class="two fields">
@@ -21,7 +21,7 @@
           <input type="text" name="itemid" placeholder= "Will use UUID later">
         </div> -->
         <div class="field">
-          <label>Item Name</label>
+          <label><h4>Item Name</h4></label>
           <input type="text" name="name" placeholder="Name your item">
         </div>
       </div>
@@ -29,7 +29,7 @@
 
     <div class = "two fields">
       <div class = "field">
-        <label>Condition of your Item</label>
+        <label><h4>Condition of your Item</h4></label>
 
           <div class="ui fluid selection dropdown">
              <input type="hidden" name="condition">
@@ -50,7 +50,7 @@
 
          </div>
          <div class = "field">
-           <label>Category of Your Item</label>
+           <label><h4>Category of Your Item</h4></label>
            <div class = "ui fluid selection dropdown">
              <input type = "hidden" name = "category">
               <i class="dropdown icon"></i>
@@ -74,7 +74,7 @@
 
      <div class="two fields">
      <div class="field">
-       <label>Price: </label>
+       <label><h4>Price: </h4></label>
          <div class = "eight wide field">
              <div class = "ui input">
                <input type="float" name="price" placeholder="How much you want to charge?">
@@ -83,7 +83,7 @@
      </div>
 
      <div class="field">
-       <label>Keyword: </label>
+       <label><h4>Keyword: </h4></label>
          <div class = "eight wide field">
              <div class = "ui input">
                <input type="text" name="keyword" placeholder="What's the keyword">
@@ -95,7 +95,7 @@
     <!--{{ form.as_p }} -->
 
     <div class = "field">
-      <label>Description: </label>
+      <label><h4>Description: </h4></label>
       <div class="row">
           <div class="input-field col s12">
             <textarea name="description" class="materialize-textarea" data-length="250" placeholder="Write your description here"></textarea>

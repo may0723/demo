@@ -14,6 +14,7 @@ from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import ObjectDoesNotExist
 import operator
+from django.core.paginator import Paginator
 
 import hashlib
 
@@ -30,10 +31,14 @@ class CommentForm(ModelForm):
 
 def home(request):
     items = Item.objects.all()
+    paginator_obj=Paginator(items,10)
+    request_page_num=request.GET.get('page',1)
+    page_obj=paginator_obj.page(request_page_num)
+    total_page_number=paginator_obj.num_pages
     if request.session.get('is_login',None):
-         return render(request, 'profile.html',{'items': items})
+         return render(request, 'profile.html',{'page_obj':page_obj,'paginator_obj':paginator_obj})
     else:
-         return render(request, 'home.html',{'items': items})
+         return render(request, 'home.html',{'page_obj':page_obj,'paginator_obj':paginator_obj})
 
 def item_create(request):
      if request.POST:
@@ -112,7 +117,7 @@ def item_update(request, id, template_name='update_item.html'):
     if request.POST:
         temp = request.POST.copy()
         temp['userid'] = request.session.get('user_id', None)
-        form = ItemForm(temp)
+        form = ItemForm(temp, request.FILES)
     else:
         form = ItemForm(None)
 
@@ -130,7 +135,7 @@ def item_delete(request, id, template_name='home.html'):
     item = get_object_or_404(Item, itemid=id)
 
     item.delete()
-    return redirect('profile')
+    return redirect('MyItems')
 
 def item_search(request, template_name='search_item.html'):
     if request.method == 'POST':
@@ -457,12 +462,20 @@ def logout(request):
 
 def profile(request):
     items = Item.objects.all()
-    return render(request, 'profile.html',{'items': items})
+    paginator_obj=Paginator(items,10)
+    request_page_num=request.GET.get('page',1)
+    page_obj=paginator_obj.page(request_page_num)
+    total_page_number=paginator_obj.num_pages
+    return render(request, 'profile.html',{'page_obj':page_obj,'paginator_obj':paginator_obj})
 
 def MyItems(request):
     this_user_id = request.session.get('user_id', None)
     items = Item.objects.filter(userid = this_user_id)
-    return render(request, 'MyItems.html',{'items': items})
+    paginator_obj=Paginator(items,10)
+    request_page_num=request.GET.get('page',1)
+    page_obj=paginator_obj.page(request_page_num)
+    total_page_number=paginator_obj.num_pages
+    return render(request, 'MyItems.html',{'page_obj':page_obj,'paginator_obj':paginator_obj})
 
 def profile_update(request):
     pass

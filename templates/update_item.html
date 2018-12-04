@@ -10,7 +10,7 @@
 <script src="{% static 'semantic.min.js' %}"></script>
 
 
-<form class = "ui form" method = "post">{% csrf_token %}
+<form class = "ui form" method = "post" enctype="multipart/form-data">{% csrf_token %}
 
     <h3 class = "ui dividing header">Item Information</h3>
     <div class="field">
@@ -22,7 +22,7 @@
         </div> -->
         <div class="field">
           <label>Item Name</label>
-          <input type="text" name="name" value={{item.name}}>
+          <input type="text" name="name" value="{{item.name}}">
         </div>
       </div>
     </div>
@@ -32,7 +32,7 @@
         <label>Condition of your Item</label>
 
           <div class="ui fluid selection dropdown">
-             <input type="hidden" name="condition" value={{item.condition}}>
+             <input type="hidden" name="condition" value="{{item.condition}}">
              <i class="dropdown icon"></i>
              <div class="default text">Condition</div>
                <div class="menu">
@@ -52,7 +52,7 @@
          <div class = "field">
            <label>Category of Your Item</label>
            <div class = "ui fluid selection dropdown">
-             <input type = "hidden" name = "category" value={{item.category}}>
+             <input type = "hidden" name = "category" value="{{item.category}}">
               <i class="dropdown icon"></i>
               <div class="default text">Category</div>
               <div class="menu">
@@ -77,7 +77,7 @@
        <label>Price: </label>
          <div class = "eight wide field">
              <div class = "ui input">
-               <input type="float" name="price" value={{item.price}} placeholder="How much you want to charge?">
+               <input type="float" name="price" value="{{item.price}}" placeholder="How much you want to charge?">
              </div>
          </div>
      </div>
@@ -86,7 +86,7 @@
        <label>Keyword: </label>
          <div class = "eight wide field">
              <div class = "ui input">
-               <input type="text" name="keyword" value={{item.keyword}} placeholder="What's the keyword">
+               <input type="text" name="keyword" value="{{item.keyword}}" placeholder="What's the keyword">
              </div>
          </div>
      </div>
